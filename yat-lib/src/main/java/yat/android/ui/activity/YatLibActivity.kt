@@ -42,21 +42,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.orhanobut.logger.Logger
 import yat.android.R
 import yat.android.YatLib
-import yat.android.data.YatCart
 import yat.android.databinding.ActivityYatLibBinding
-import yat.android.ui.fragment.DisplayYatFragment
-import yat.android.ui.fragment.IntroPage1Fragment
-import yat.android.ui.fragment.IntroPage2Fragment
-import yat.android.ui.fragment.IntroPage3Fragment
+import yat.android.ui.fragment.displayYat.DisplayYatFragment
+import yat.android.ui.fragment.intro.IntroPage1Fragment
+import yat.android.ui.fragment.intro.IntroPage2Fragment
+import yat.android.ui.fragment.intro.IntroPage3Fragment
 
 internal class YatLibActivity :
     AppCompatActivity(),
     IntroPage1Fragment.Delegate,
     IntroPage2Fragment.Delegate,
-    IntroPage3Fragment.Delegate,
     DisplayYatFragment.Delegate {
 
     private lateinit var ui: ActivityYatLibBinding
@@ -98,7 +95,7 @@ internal class YatLibActivity :
             when (position) {
                 0 -> IntroPage1Fragment(this@YatLibActivity)
                 1 -> IntroPage2Fragment(this@YatLibActivity)
-                2 -> IntroPage3Fragment(this@YatLibActivity)
+                2 -> IntroPage3Fragment()
                 else -> error("Unexpected position: $position")
             }
 
@@ -127,26 +124,6 @@ internal class YatLibActivity :
 
     override fun onNext(fragment: IntroPage2Fragment) {
         ui.viewPager.currentItem = 2
-    }
-
-    override fun onRandomYatSuccessful(
-        fragment: IntroPage3Fragment,
-        cart: YatCart
-    ) {
-        Logger.i("Random yat successful: ${cart.getYat()}")
-        supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(
-                R.anim.enter_from_bottom, 0,
-                0, R.anim.exit_to_bottom
-            )
-            .add(
-                R.id.display_yat_fragment_container,
-                DisplayYatFragment(cart, this),
-                DisplayYatFragment::class.java.simpleName
-            )
-            .addToBackStack(null)
-            .commit()
     }
 
     override fun onBack(fragment: DisplayYatFragment) {

@@ -82,7 +82,7 @@
         android:id="@+id/description_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/see_your_yat_button"
+        android:layout_above="@id/create_new_yat_button"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="@dimen/info_description_bottom_margin"
@@ -95,7 +95,7 @@
         app:customFont="?infoDescriptionFont" />
 
     <yat.android.ui.component.CustomFontButton
-        android:id="@+id/see_your_yat_button"
+        android:id="@+id/create_new_yat_button"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_above="@id/connect_an_existing_yat_button"
@@ -103,20 +103,30 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/primary_button_bg"
-        android:text="@string/step_3_see_your_yat"
+        android:text="@string/step_3_create_your_yat"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:customFont="?buttonFont" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/create_new_yat_button"
+        android:layout_alignEnd="@id/create_new_yat_button"
+        android:layout_alignBottom="@id/create_new_yat_button"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@null"
+        android:src="?webLinkIconDrawable" />
+
     <LinearLayout
         android:id="@+id/progress_bar_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_alignStart="@id/see_your_yat_button"
-        android:layout_alignTop="@id/see_your_yat_button"
-        android:layout_alignEnd="@id/see_your_yat_button"
-        android:layout_alignBottom="@id/see_your_yat_button"
+        android:layout_alignStart="@id/create_new_yat_button"
+        android:layout_alignTop="@id/create_new_yat_button"
+        android:layout_alignEnd="@id/create_new_yat_button"
+        android:layout_alignBottom="@id/create_new_yat_button"
         android:background="@drawable/primary_button_bg"
         android:gravity="center"
         android:visibility="gone">

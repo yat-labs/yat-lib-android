@@ -33,6 +33,8 @@
 package yat.android.ui.extension
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 
@@ -44,4 +46,12 @@ fun Context.getColorFromAttr(
     val textColor = typedArray.getColor(0, 0)
     typedArray.recycle()
     return textColor
+}
+
+fun Context.openUrl(url: String) {
+    val browserIntent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse(url)
+    )
+    startActivity(browserIntent)
 }

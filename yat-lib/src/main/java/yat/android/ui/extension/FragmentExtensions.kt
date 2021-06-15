@@ -50,3 +50,14 @@ internal fun Fragment.displayErrorDialog(
         .setCancelable(true)
         .show()
 }
+
+internal fun Fragment.displayErrorDialog(
+    dto: ErrorDialogDto
+) {
+    displayErrorDialog(dto.titleStringResourceId, dto.messageStringResourceId)
+}
+
+internal data class ErrorDialogDto(
+    val titleStringResourceId: Int,
+    val messageStringResourceId: Int,
+)

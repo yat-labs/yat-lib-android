@@ -30,7 +30,7 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package yat.android.ui.fragment
+package yat.android.ui.fragment.intro
 
 import android.content.Context
 import android.os.Bundle
@@ -45,20 +45,13 @@ import yat.android.data.YatCart
 import yat.android.databinding.FragmentIntroPage3Binding
 import yat.android.ui.extension.*
 import yat.android.ui.extension.gone
-import yat.android.ui.extension.invisible
 import yat.android.ui.extension.visible
-import java.lang.ref.WeakReference
 
-internal class IntroPage3Fragment(delegate: Delegate) : Fragment() {
-
-    interface Delegate {
-        fun onRandomYatSuccessful(fragment: IntroPage3Fragment, cart: YatCart)
-    }
+internal class IntroPage3Fragment : Fragment() {
 
     private var _ui: FragmentIntroPage3Binding? = null
     private val ui get() = _ui!!
     private lateinit var viewModel: IntroPage3FragmentViewModel
-    private val delegateWeakReference = WeakReference(delegate)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,19 +72,15 @@ internal class IntroPage3Fragment(delegate: Delegate) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ui.progressBar.setColor(
-            resources.getColor(R.color.white, null)
-        )
-        ui.seeYourYatButton.setOnClickListener {
+        subscribeUI()
+        ui.progressBar.setColor(resources.getColor(R.color.white, null))
+        ui.createNewYatButton.setOnClickListener {
             it.temporarilyDisableClick()
-            getRandomYat()
+            viewModel.createNewYat()
         }
         ui.connectAnExistingYatButton.setOnClickListener {
             it.temporarilyDisableClick()
-            displayErrorDialog(
-                R.string.common_under_construction_icon,
-                R.string.common_under_construction
-            )
+            viewModel.connectExistingYat()
         }
     }
 
@@ -100,37 +89,20 @@ internal class IntroPage3Fragment(delegate: Delegate) : Fragment() {
         _ui = null
     }
 
-    private fun getRandomYat() {
-        ui.seeYourYatButton.invisible()
-        ui.progressBarContainer.visible()
-        ui.connectAnExistingYatButton.isEnabled = false
-        viewModel.getRandomYat(
-            onSuccess = { cart ->
-                onRandomYatSuccessful(cart)
-            },
-            onError = { errorCode, throwable ->
-                onRandomYatError(errorCode, throwable)
-            }
-        )
+    private fun subscribeUI() = with(viewModel) {
+        externalLink.observe(viewLifecycleOwner) { requireContext().openUrl(it) }
+
+        error.observe(viewLifecycleOwner) { onRandomYatError(it) }
+
+        errorDialog.observe(viewLifecycleOwner) { displayErrorDialog(it) }
     }
 
-    private fun onRandomYatSuccessful(cart: YatCart) {
-        ui.seeYourYatButton.visible()
-        ui.progressBarContainer.gone()
-        ui.connectAnExistingYatButton.isEnabled = true
-        delegateWeakReference.get()?.onRandomYatSuccessful(
-            this,
-            cart
-        )
-    }
-
-    private fun onRandomYatError(errorCode: Int?, throwable: Throwable?) {
+    private fun onRandomYatError(throwable: Throwable?) {
         Logger.e(
             "Error while getting random yat.\n"
-                    + "Status code: $errorCode\n"
                     + "Throwable message: ${throwable?.message}"
         )
-        ui.seeYourYatButton.visible()
+        ui.createNewYatButton.visible()
         ui.progressBarContainer.gone()
         ui.connectAnExistingYatButton.isEnabled = true
         displayErrorDialog(

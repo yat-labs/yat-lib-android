@@ -30,24 +30,26 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package yat.android.ui.fragment
+package yat.android.ui.fragment.intro
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import yat.android.databinding.FragmentIntroPage2Binding
+import yat.android.R
+import yat.android.YatLib
+import yat.android.databinding.FragmentIntroPage1Binding
 import yat.android.ui.extension.temporarilyDisableClick
 import java.lang.ref.WeakReference
 
-internal class IntroPage2Fragment(delegate: Delegate) : Fragment() {
+internal class IntroPage1Fragment(delegate: Delegate) : Fragment() {
 
     interface Delegate {
-        fun onNext(fragment: IntroPage2Fragment)
+        fun onNext(fragment: IntroPage1Fragment)
     }
 
-    private var _ui: FragmentIntroPage2Binding? = null
+    private var _ui: FragmentIntroPage1Binding? = null
     private val ui get() = _ui!!
     private val delegateWeakReference = WeakReference(delegate)
 
@@ -56,12 +58,18 @@ internal class IntroPage2Fragment(delegate: Delegate) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _ui = FragmentIntroPage2Binding.inflate(inflater, container, false)
+        _ui = FragmentIntroPage1Binding.inflate(inflater, container, false)
         return ui.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ui.descriptionTextView.text = String.format(
+            resources.getString(
+                R.string.step_1_description,
+                YatLib.config.name
+            )
+        )
         ui.nextButton.setOnClickListener {
             it.temporarilyDisableClick()
             delegateWeakReference.get()?.onNext(this)
